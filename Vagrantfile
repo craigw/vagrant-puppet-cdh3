@@ -25,6 +25,7 @@ end
 
 roles = {
   'primary_namenode' => 101..101,
+  'job_tracker'      => 111..111,
   'datanode'         => 121..123,
 }
 

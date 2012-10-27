@@ -1,4 +1,7 @@
 node base {
+  exec { "disable iptables":
+    command => "/sbin/iptables -F"
+  }
 }
 
 node default inherits base {
@@ -9,8 +12,13 @@ node /^primary-namenode-\d{3}\.hadoop\.dev$/ inherits base {
   include hadoop::namenode
 }
 
+node /^job-tracker-\d{3}\.hadoop\.dev$/ inherits base {
+  include hadoop::jobtracker
+}
+
 node /^datanode-\d{3}\.hadoop\.dev$/ inherits base {
   include hadoop::datanode
+  include hadoop::tasktracker
 }
 
 class java::install {
@@ -24,14 +32,14 @@ class hadoop::params {
   $base_package_name = "hadoop-0.20"
   $namenode_package_name = "hadoop-0.20-namenode"
   $datanode_package_name = "hadoop-0.20-datanode"
-  $jobtracker_package_name = "hadoop-0.20-mapreduce-jobtracker"
-  $tasktracker_package_name = "hadoop-0.20-mapreduce-tasktracker"
+  $jobtracker_package_name = "hadoop-0.20-jobtracker"
+  $tasktracker_package_name = "hadoop-0.20-tasktracker"
 
   #_ SERVICES _#
   $namenode_service_name = "hadoop-0.20-namenode"
   $datanode_service_name = "hadoop-0.20-datanode"
-  $jobtracker_service_name = "hadoop-0.20-mapreduce-jobtracker"
-  $tasktracker_service_name = "hadoop-0.20-mapreduce-tasktracker"
+  $jobtracker_service_name = "hadoop-0.20-jobtracker"
+  $tasktracker_service_name = "hadoop-0.20-tasktracker"
 
   #_ GENERIC _#
   $cluster_name = "dev"
