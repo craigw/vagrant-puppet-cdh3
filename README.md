@@ -16,8 +16,22 @@ setup throw-away Hadoop cluster which I can play with.
     $ bundle exec vagrant up
     ... time passes, potentially quite a long time ...
 
+You'll probably want to add the following entires to your `/etc/hosts` file,
+but they're not completely necessary and both HDFS and MapReduce will continue
+to work without them:
+
+    192.168.33.101	primary-namenode-001.hadoop.dev	primary-namenode-001
+    192.168.33.111	job-tracker-001.hadoop.dev	job-tracker-001
+    192.168.33.121	datanode-001.hadoop.dev	datanode-001
+    192.168.33.122	datanode-002.hadoop.dev	datanode-002
+    192.168.33.123	datanode-003.hadoop.dev	datanode-003
+    192.168.33.124	datanode-004.hadoop.dev	datanode-004
+    192.168.33.125	datanode-005.hadoop.dev	datanode-005
+    192.168.33.126	datanode-006.hadoop.dev	datanode-006
+
 That's it, you should now have a functioning fully distributed Hadoop cluster
 that'll run MapReduce jobs.
+
 
 ## Adding data to HDFS
 
