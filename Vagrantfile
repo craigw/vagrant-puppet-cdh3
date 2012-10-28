@@ -20,6 +20,7 @@ def define_vm config, role, index, ip, memory = 512
       p.manifests_path = "manifests"
       p.manifest_file  = "site.pp"
     end
+    box.vm.share_folder 'data', '/data', 'data'
   end
 end
 
