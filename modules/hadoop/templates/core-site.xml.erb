@@ -34,11 +34,13 @@
     <value><%= scope.lookupvar('hadoop::params::io_compression_codecs') %></value>
     <final>true</final>
   </property>
+  <!--
   <property>
     <name>io.compression.codec.lzo.class</name>
     <value><%= scope.lookupvar('hadoop::params::io_compression_codec_lzo_class') %></value>
     <final>true</final>
   </property>
+  -->
   <property>
    <name>io.file.buffer.size</name>
    <value><%= scope.lookupvar('hadoop::params::io_file_buffer_size') %></value>

@@ -50,7 +50,7 @@ class hadoop::params {
   $fs_trash_interval              = '15'
   $topology_script_file_name      = '/etc/hadoop/conf/rack.sh'
   $local_cache_size               = '1073741824'
-  $io_compression_codecs          = 'org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.DefaultCodec,com.hadoop.compression.lzo.LzoCodec,org.apache.hadoop.io.compress.BZip2Codec,org.apache.hadoop.io.compress.SnappyCodec'
+  $io_compression_codecs          = 'org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.DefaultCodec,org.apache.hadoop.io.compress.BZip2Codec,org.apache.hadoop.io.compress.SnappyCodec'
   $io_compression_codec_lzo_class = 'com.hadoop.compression.lzo.LzoCodec'
   $io_file_buffer_size            = '65536'
   $io_sort_factor                 = '64'
@@ -61,7 +61,7 @@ class hadoop::params {
   #_ CLUSTER HOSTS _#
   $cluster_dfs_hosts            = [ 'datanode-001.hadoop.dev', 'datanode-002.hadoop.dev', 'datanode-003.hadoop.dev', 'datanode-004.hadoop.dev', 'datanode-005.hadoop.dev', 'datanode-006.hadoop.dev' ]
   $cluster_dfs_hosts_exclude    = [ '' ]
-  $cluster_mapred_hosts         = [ '' ]
+  $cluster_mapred_hosts         = [ 'datanode-001.hadoop.dev', 'datanode-002.hadoop.dev', 'datanode-003.hadoop.dev', 'datanode-004.hadoop.dev', 'datanode-005.hadoop.dev', 'datanode-006.hadoop.dev' ]
   $cluster_mapred_hosts_exclude = [ '' ]
 
   #_ HDFS SITE _#
@@ -85,14 +85,14 @@ class hadoop::params {
   $mapred_job_tracker                                  = 'job-tracker-001.hadoop.dev:8021'
   $mapred_hosts                                        = '/etc/hadoop/conf/mapred.hosts'
   $mapred_hosts_exclude                                = '/etc/hadoop/conf/mapred.hosts.exclude'
-  $mapred_output_compression_codec                     = 'com.hadoop.compression.lzo.LzoCodec'
+  $mapred_output_compression_codec                     = 'org.apache.hadoop.io.compress.BZip2Codec'
   $mapred_output_compression_type                      = 'BLOCK'
   $mapred_output_compress                              = 'false'
-  $mapred_map_output_compression_codec                 = 'com.hadoop.compression.lzo.LzoCodec'
+  $mapred_map_output_compression_codec                 = 'org.apache.hadoop.io.compress.BZip2Codec'
   $mapreduce_jobtracker_tasktracker_maxblacklists      = '4'
   $mapreduce_job_maxtaskfailures_per_tracker           = '4'
   $mapred_compress_map_output                          = 'false'
-  $mapred_child_java_opts                              = '-Xms2048m -Xmx2048m'
+  $mapred_child_java_opts                              = '-Xms1024m -Xmx1024m'
   $mapred_child_ulimit                                 = '5242880'
   $tasktracker_http_threads                            = '80'
   $mapred_reduce_slowstart_completed_maps              = '0.60'
@@ -111,7 +111,7 @@ class hadoop::params {
   $mapred_jobtracker_completeuserjobs_maximum          = '15'
   $mapred_job_tracker_handler_count                    = '64'
   $mapred_tasktracker_map_tasks_maximum                = '4'
-  $mapred_submit_replication                           = '4'
+  $mapred_submit_replication                           = '2'
   $mapred_tasktracker_reduce_tasks_maximum             = '4'
   $mapred_userlog_retain_hours                         = '8'
   $mapred_reduce_parallel_copies                       = '10'
@@ -191,6 +191,11 @@ class hadoop::hosts {
   host { "primary-namenode-001.hadoop.dev":
     ip => "192.168.33.101",
     host_aliases => "primary-namenode-001"
+  }
+
+  host { "job-tracker-001.hadoop.dev":
+    ip => "192.168.33.111",
+    host_aliases => "job-tracker-001"
   }
 
   host { "datanode-001.hadoop.dev":
@@ -511,6 +516,19 @@ class hadoop::install {
     group => 'hdfs',
     recurse => true,
     require => Exec["create data volumes cache root"]
+  }
+
+  exec { "create data volumes mapreduce root":
+    command => "/bin/mkdir -p {/tmp,${hadoop::params::data_volumes}}/hadoop/mapred/local",
+    creates => "${hadoop::params::data_volumes}/hadoop/mapred/local",
+  }
+
+  file { [ "/tmp/hadoop/mapred/local", "${hadoop::params::data_volumes}/hadoop/mapred/local" ]:
+    ensure => directory,
+    owner => "mapred",
+    group => "hadoop",
+    mode => 0755,
+    require => Exec["create data volumes mapreduce root"]
   }
 
   file { "/etc/hadoop/conf.${hadoop::params::cluster_name}":

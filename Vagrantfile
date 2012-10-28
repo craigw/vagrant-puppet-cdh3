@@ -7,10 +7,10 @@
 # Datanodes range 121 - 180
 # Generally the tasktrackers will live on the datanodes
 
-def define_vm config, role, index, ip
+def define_vm config, role, index, ip, memory = 512
   id = (index + 1).to_s.rjust(3, '0')
   config.vm.define "#{role}_#{id}" do |box|
-    box.vm.customize [ "modifyvm", :id, "--memory", 512 ]
+    box.vm.customize [ "modifyvm", :id, "--memory", memory ]
     box.vm.box = "centos_6_3"
     box.vm.box_url = "https://dl.dropbox.com/u/7225008/Vagrant/CentOS-6.3-x86_64-minimal.box"
     box.vm.network :hostonly, "192.168.33.#{ip}", :netmask => "255.255.255.0"
@@ -32,6 +32,8 @@ roles = {
 Vagrant::Config.run do |config|
   roles.each do |name, range|
     range.to_a.each do |n|
+      memory = 256
+      memory = 768 if name == 'datanode'
       define_vm config, name, n - range.first, n
     end
   end

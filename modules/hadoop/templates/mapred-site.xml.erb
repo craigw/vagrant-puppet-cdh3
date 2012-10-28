@@ -21,7 +21,7 @@
   </property>
   <property>
     <name>mapred.local.dir</name>
-    <value><%= has_variable?('data_volumes') ? data_volumes.split(',').join('/hadoop/mapred/local,') + '/hadoop/mapred/local' : '/tmp/hadoop/mapred/local' %></value>
+    <value><%= scope.lookupvar('hadoop::params::data_volumes').split(',').join('/hadoop/mapred/local,') + '/hadoop/mapred/local' %></value>
     <final>true</final>
   </property>
   <property>
@@ -34,7 +34,7 @@
     <final>true</final>
   </property>
   <property>
-    <name>mapred.output.compress</name> 
+    <name>mapred.output.compress</name>
     <value><%= scope.lookupvar('hadoop::params::mapred_output_compress') %></value>
   </property>
   <property>
@@ -43,7 +43,7 @@
     <final>true</final>
   </property>
   <property>
-    <name>mapred.compress.map.output</name> 
+    <name>mapred.compress.map.output</name>
     <value><%= scope.lookupvar('hadoop::params::mapred_compress_map_output') %></value>
     <final>true</final>
   </property>
