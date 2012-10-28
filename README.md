@@ -46,7 +46,7 @@ of the directory:
 
 ### A simple streaming example
 
-Centos 6.3, which this cluster uses, has the cat and wc binaries at these
+Centos 6.3, which this cluster uses, has the `cat` and `wc `binaries at these
 paths:
 
     /bin/cat
