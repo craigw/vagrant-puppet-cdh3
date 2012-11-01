@@ -35,7 +35,7 @@ Vagrant::Config.run do |config|
     range.to_a.each do |n|
       memory = 256
       memory = 768 if name == 'datanode'
-      define_vm config, name, n - range.first, n
+      define_vm config, name, n - range.first, n, memory
     end
   end
 end
