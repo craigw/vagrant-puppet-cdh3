@@ -510,9 +510,9 @@ class hadoop::install {
     creates => $hadoop::params::data_volumes
   }
 
-  file { $hadoop::params::data_volumes:
+  file { [ "/tmp/hadoop", $hadoop::params::data_volumes ]:
     ensure => directory,
-    mode => 0644,
+    mode => 0777,
     owner => 'hdfs',
     group => 'hdfs',
     recurse => true,
@@ -528,7 +528,7 @@ class hadoop::install {
     ensure => directory,
     owner => "mapred",
     group => "hadoop",
-    mode => 0755,
+    mode => 0777,
     require => [ Exec["create data volumes mapreduce root"], Package[$hadoop::params::base_package_name] ]
   }
 
@@ -542,7 +542,7 @@ class hadoop::configure {
   include hadoop::hosts
   include hadoop::install
 
-  Class["hadoop::install"] ~> Class["hadoop::configure"]
+  Class["hadoop::install"] -> Class["hadoop::configure"]
 
   file { "${hadoop::params::config_root}/conf.${hadoop::params::cluster_name}/hdfs-site.xml":
     content => template('hadoop/hdfs-site.xml.erb'),
@@ -737,6 +737,19 @@ class hadoop::datanode {
 }
 
 class hadoop::datanode::install {
+  file { "/tmp/hadoop/dfs":
+    ensure => directory,
+    owner => "hdfs",
+    group => "hadoop"
+  }
+
+  file { "/tmp/hadoop/dfs/data":
+    ensure => directory,
+    owner => "hdfs",
+    group => "hadoop",
+    require => File["/tmp/hadoop/dfs"]
+  }
+
   package { $hadoop::params::datanode_package_name:
     ensure => installed
   }
