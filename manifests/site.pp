@@ -528,7 +528,7 @@ class hadoop::install {
     owner => "mapred",
     group => "hadoop",
     mode => 0755,
-    require => Exec["create data volumes mapreduce root"]
+    require => [ Exec["create data volumes mapreduce root"], Package[$hadoop::params::base_package_name] ]
   }
 
   file { "/etc/hadoop/conf.${hadoop::params::cluster_name}":
