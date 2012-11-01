@@ -721,7 +721,8 @@ class hadoop::jobtracker::install {
 class hadoop::jobtracker::service {
   service { $hadoop::params::jobtracker_service_name:
     require => Package[$hadoop::params::jobtracker_package_name],
-    enable  => true
+    enable  => true,
+    ensure => running
   }
 }
 
@@ -744,7 +745,8 @@ class hadoop::datanode::install {
 class hadoop::datanode::service {
   service { $hadoop::params::datanode_service_name:
     require => Package[$hadoop::params::datanode_package_name],
-    enable  => true
+    enable  => true,
+    ensure => running
   }
 }
 
@@ -767,6 +769,7 @@ class hadoop::tasktracker::install {
 class hadoop::tasktracker::service {
   service { $hadoop::params::tasktracker_service_name:
     require => Package[$hadoop::params::tasktracker_package_name],
-    enable  => true
+    enable  => true,
+    ensure => running
   }
 }
