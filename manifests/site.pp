@@ -43,12 +43,13 @@ class hadoop::params {
 
   #_ GENERIC _#
   $cluster_name = "dev"
+  $config_root = "/etc/hadoop-0.20"
 
   #_ CORE SITE _#
   $fs_default_name                = 'hdfs://primary-namenode-001.hadoop.dev:8020'
   $hadoop_tmp_dir                 = '/tmp/hadoop'
   $fs_trash_interval              = '15'
-  $topology_script_file_name      = '/etc/hadoop/conf/rack.sh'
+  $topology_script_file_name      = '${hadoop::params::config_root}/conf/rack.sh'
   $local_cache_size               = '1073741824'
   $io_compression_codecs          = 'org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.DefaultCodec,org.apache.hadoop.io.compress.BZip2Codec,org.apache.hadoop.io.compress.SnappyCodec'
   $io_compression_codec_lzo_class = 'com.hadoop.compression.lzo.LzoCodec'
@@ -68,8 +69,8 @@ class hadoop::params {
   $dfs_replication                       = '2'
   $dfs_permissions                       = 'false'
   $dfs_datanode_failed_volumes_tolerated = '0'
-  $dfs_hosts                             = '/etc/hadoop/conf/dfs.hosts'
-  $dfs_hosts_exclude                     = '/etc/hadoop/conf/dfs.hosts.exclude'
+  $dfs_hosts                             = '${hadoop::params::config_root}/conf/dfs.hosts'
+  $dfs_hosts_exclude                     = '${hadoop::params::config_root}/conf/dfs.hosts.exclude'
   $dfs_datanode_du_reserved              = '10737418240'
   $dfs_namenode_handler_count            = '64'
   $dfs_datanode_handler_count            = '10'
@@ -83,8 +84,8 @@ class hadoop::params {
 
   #_ MAPRED SITE _#
   $mapred_job_tracker                                  = 'job-tracker-001.hadoop.dev:8021'
-  $mapred_hosts                                        = '/etc/hadoop/conf/mapred.hosts'
-  $mapred_hosts_exclude                                = '/etc/hadoop/conf/mapred.hosts.exclude'
+  $mapred_hosts                                        = '${hadoop::params::config_root}/conf/mapred.hosts'
+  $mapred_hosts_exclude                                = '${hadoop::params::config_root}/conf/mapred.hosts.exclude'
   $mapred_output_compression_codec                     = 'org.apache.hadoop.io.compress.BZip2Codec'
   $mapred_output_compression_type                      = 'BLOCK'
   $mapred_output_compress                              = 'false'
@@ -99,7 +100,7 @@ class hadoop::params {
   $mapred_map_tasks_speculative_execution              = 'false'
   $mapred_reduce_tasks_speculative_execution           = 'false'
   $mapreduce_tasktracker_cache_local_numberdirectories = '200'
-  $mapred_fairscheduler_allocation_file                = '/etc/hadoop/conf/fair-scheduler.xml'
+  $mapred_fairscheduler_allocation_file                = '${hadoop::params::config_root}/conf/fair-scheduler.xml'
   $mapred_fairscheduler_poolnameproperty               = 'user.name'
   $mapred_fairscheduler_preemption                     = 'true'
   $mapred_fairscheduler_sizebasedweight                = 'false'
@@ -531,7 +532,7 @@ class hadoop::install {
     require => [ Exec["create data volumes mapreduce root"], Package[$hadoop::params::base_package_name] ]
   }
 
-  file { "/etc/hadoop/conf.${hadoop::params::cluster_name}":
+  file { "${hadoop::params::config_root}/conf.${hadoop::params::cluster_name}":
     ensure => directory,
     require => Package[$hadoop::params::base_package_name]
   }
@@ -541,109 +542,109 @@ class hadoop::configure {
   include hadoop::hosts
   include hadoop::install
 
-  Class["hadoop::install"] -> Class["hadoop::configure"]
+  Class["hadoop::install"] ~> Class["hadoop::configure"]
 
-  file { "/etc/hadoop/conf.${hadoop::params::cluster_name}/hdfs-site.xml":
+  file { "${hadoop::params::config_root}/conf.${hadoop::params::cluster_name}/hdfs-site.xml":
     content => template('hadoop/hdfs-site.xml.erb'),
     owner   => 'root',
     group   => 'root',
     mode    => '0644'
   }
 
-  file { "/etc/hadoop/conf.${hadoop::params::cluster_name}/dfs.hosts":
+  file { "${hadoop::params::config_root}/conf.${hadoop::params::cluster_name}/dfs.hosts":
     content => template('hadoop/dfs.hosts.erb'),
     owner   => 'root',
     group   => 'root',
     mode    => '0644'
   }
 
-  file { "/etc/hadoop/conf.${hadoop::params::cluster_name}/dfs.hosts.exclude":
+  file { "${hadoop::params::config_root}/conf.${hadoop::params::cluster_name}/dfs.hosts.exclude":
     content => template('hadoop/dfs.hosts.exclude.erb'),
     owner   => 'root',
     group   => 'root',
     mode    => '0644'
   }
 
-  file { "/etc/hadoop/conf.${hadoop::params::cluster_name}/mapred.hosts":
+  file { "${hadoop::params::config_root}/conf.${hadoop::params::cluster_name}/mapred.hosts":
     content => template('hadoop/mapred.hosts.erb'),
     owner   => 'root',
     group   => 'root',
     mode    => '0644'
   }
 
-  file { "/etc/hadoop/conf.${hadoop::params::cluster_name}/mapred.hosts.exclude":
+  file { "${hadoop::params::config_root}/conf.${hadoop::params::cluster_name}/mapred.hosts.exclude":
     content => template('hadoop/mapred.hosts.exclude.erb'),
     owner   => 'root',
     group   => 'root',
     mode    => '0644'
   }
 
-  file { "/etc/hadoop/conf.${hadoop::params::cluster_name}/rack.sh":
+  file { "${hadoop::params::config_root}/conf.${hadoop::params::cluster_name}/rack.sh":
     content => template('hadoop/rack.sh.erb'),
     owner   => 'root',
     group   => 'root',
     mode    => '0755'
   }
 
-  file { "/etc/hadoop/conf.${hadoop::params::cluster_name}/core-site.xml":
+  file { "${hadoop::params::config_root}/conf.${hadoop::params::cluster_name}/core-site.xml":
     content => template('hadoop/core-site.xml.erb'),
     owner   => 'root',
     group   => 'root',
     mode    => '0644'
   }
 
-  file { "/etc/hadoop/conf.${hadoop::params::cluster_name}/mapred-site.xml":
+  file { "${hadoop::params::config_root}/conf.${hadoop::params::cluster_name}/mapred-site.xml":
     content => template('hadoop/mapred-site.xml.erb'),
     owner   => 'root',
     group   => 'root',
     mode    => '0644'
   }
 
-  file { "/etc/hadoop/conf.${hadoop::params::cluster_name}/capacity-scheduler.xml":
+  file { "${hadoop::params::config_root}/conf.${hadoop::params::cluster_name}/capacity-scheduler.xml":
     content => template('hadoop/capacity-scheduler.xml.erb'),
     owner   => 'root',
     group   => 'root',
     mode    => '0644'
   }
 
-  file { "/etc/hadoop/conf.${hadoop::params::cluster_name}/fair-scheduler.xml":
+  file { "${hadoop::params::config_root}/conf.${hadoop::params::cluster_name}/fair-scheduler.xml":
     content => template('hadoop/fair-scheduler.xml.erb'),
     owner   => 'root',
     group   => 'root',
     mode    => '0644'
   }
 
-  file { "/etc/hadoop/conf.${hadoop::params::cluster_name}/hadoop-env.sh":
+  file { "${hadoop::params::config_root}/conf.${hadoop::params::cluster_name}/hadoop-env.sh":
     content => template('hadoop/hadoop-env.sh.erb'),
     owner   => 'root',
     group   => 'root',
     mode    => '0644'
   }
 
-  file { "/etc/hadoop/conf.${hadoop::params::cluster_name}/hadoop-metrics.properties":
+  file { "${hadoop::params::config_root}/conf.${hadoop::params::cluster_name}/hadoop-metrics.properties":
     content => template('hadoop/hadoop-metrics.properties.erb'),
     owner   => 'root',
     group   => 'root',
     mode    => '0644'
   }
 
-  file { "/etc/hadoop/conf.${hadoop::params::cluster_name}/hadoop-policy.xml":
+  file { "${hadoop::params::config_root}/conf.${hadoop::params::cluster_name}/hadoop-policy.xml":
     content => template('hadoop/hadoop-policy.xml.erb'),
     owner   => 'root',
     group   => 'root',
     mode    => '0644'
   }
 
-  file { "/etc/hadoop/conf.${hadoop::params::cluster_name}/mapred-queue-acls.xml":
+  file { "${hadoop::params::config_root}/conf.${hadoop::params::cluster_name}/mapred-queue-acls.xml":
     content => template('hadoop/mapred-queue-acls.xml.erb'),
     owner   => 'root',
     group   => 'root',
     mode    => '0644'
   }
 
-  file { "/etc/hadoop/conf":
+  file { "${hadoop::params::config_root}/conf":
     ensure => link,
-    target => "/etc/hadoop/conf.${hadoop::params::cluster_name}"
+    target => "${hadoop::params::config_root}/conf.${hadoop::params::cluster_name}"
   }
 }
 
