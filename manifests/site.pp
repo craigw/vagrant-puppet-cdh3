@@ -49,7 +49,7 @@ class hadoop::params {
   $fs_default_name                = 'hdfs://primary-namenode-001.hadoop.dev:8020'
   $hadoop_tmp_dir                 = '/tmp/hadoop'
   $fs_trash_interval              = '15'
-  $topology_script_file_name      = '${hadoop::params::config_root}/conf/rack.sh'
+  $topology_script_file_name      = "${hadoop::params::config_root}/conf/rack.sh"
   $local_cache_size               = '1073741824'
   $io_compression_codecs          = 'org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.DefaultCodec,org.apache.hadoop.io.compress.BZip2Codec,org.apache.hadoop.io.compress.SnappyCodec'
   $io_compression_codec_lzo_class = 'com.hadoop.compression.lzo.LzoCodec'
@@ -69,8 +69,8 @@ class hadoop::params {
   $dfs_replication                       = '2'
   $dfs_permissions                       = 'false'
   $dfs_datanode_failed_volumes_tolerated = '0'
-  $dfs_hosts                             = '${hadoop::params::config_root}/conf/dfs.hosts'
-  $dfs_hosts_exclude                     = '${hadoop::params::config_root}/conf/dfs.hosts.exclude'
+  $dfs_hosts                             = "${hadoop::params::config_root}/conf/dfs.hosts"
+  $dfs_hosts_exclude                     = "${hadoop::params::config_root}/conf/dfs.hosts.exclude"
   $dfs_datanode_du_reserved              = '10737418240'
   $dfs_namenode_handler_count            = '64'
   $dfs_datanode_handler_count            = '10'
@@ -84,8 +84,8 @@ class hadoop::params {
 
   #_ MAPRED SITE _#
   $mapred_job_tracker                                  = 'job-tracker-001.hadoop.dev:8021'
-  $mapred_hosts                                        = '${hadoop::params::config_root}/conf/mapred.hosts'
-  $mapred_hosts_exclude                                = '${hadoop::params::config_root}/conf/mapred.hosts.exclude'
+  $mapred_hosts                                        = "${hadoop::params::config_root}/conf/mapred.hosts"
+  $mapred_hosts_exclude                                = "${hadoop::params::config_root}/conf/mapred.hosts.exclude"
   $mapred_output_compression_codec                     = 'org.apache.hadoop.io.compress.BZip2Codec'
   $mapred_output_compression_type                      = 'BLOCK'
   $mapred_output_compress                              = 'false'
@@ -100,7 +100,7 @@ class hadoop::params {
   $mapred_map_tasks_speculative_execution              = 'false'
   $mapred_reduce_tasks_speculative_execution           = 'false'
   $mapreduce_tasktracker_cache_local_numberdirectories = '200'
-  $mapred_fairscheduler_allocation_file                = '${hadoop::params::config_root}/conf/fair-scheduler.xml'
+  $mapred_fairscheduler_allocation_file                = "${hadoop::params::config_root}/conf/fair-scheduler.xml"
   $mapred_fairscheduler_poolnameproperty               = 'user.name'
   $mapred_fairscheduler_preemption                     = 'true'
   $mapred_fairscheduler_sizebasedweight                = 'false'
