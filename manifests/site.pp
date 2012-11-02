@@ -516,7 +516,7 @@ class hadoop::install {
     owner => 'hdfs',
     group => 'hdfs',
     recurse => true,
-    require => Exec["create data volumes cache root"]
+    require => [ Exec["create data volumes cache root"], Package[$hadoop::params::base_package_name] ]
   }
 
   exec { "create data volumes mapreduce root":
