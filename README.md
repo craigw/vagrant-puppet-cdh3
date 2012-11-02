@@ -94,8 +94,7 @@ Once your job has finished, you can do this on one of the VMs in the Hadoop
 cluster to fetch the results:
 
     $ cd /usr/lib/hadoop-0.20
-    $ sudo -u hdfs ./bin/hadoop dfs -get my-mapreduce-output ~/mapreduce-output
-    $ cat ~/mapreduce-output/part-00000
+    $ sudo -u hdfs ./bin/hadoop dfs -cat my-mapreduce-output/part-00000
     10810899 125060394 993090345
 
 Turns out I have 10810899 lines worth of weather readings. Each line is one
